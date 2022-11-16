@@ -19,6 +19,10 @@ func registerWebUI(hdl http.Handler) (http.Handler, error) {
 		if strings.HasPrefix(r.RequestURI, "/dashboard/") {
 			http.StripPrefix("/dashboard/", http.FileServer(http.FS(distDirectory))).ServeHTTP(w, r)
 			return
+		} else if r.RequestURI == "/" {
+			// Redirect to dashboard
+			http.Redirect(w, r, "/dashboard/", http.StatusTemporaryRedirect)
+			return
 		}
 		hdl.ServeHTTP(w, r)
 	}), nil
