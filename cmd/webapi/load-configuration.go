@@ -22,6 +22,7 @@ type WebAPIConfiguration struct {
 		ReadTimeout     time.Duration `conf:"default:5s"`
 		WriteTimeout    time.Duration `conf:"default:5s"`
 		ShutdownTimeout time.Duration `conf:"default:5s"`
+		BehindProxy     bool          `conf:"default:false"`
 	}
 	Debug bool
 	DB    struct {

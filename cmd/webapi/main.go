@@ -31,6 +31,7 @@ import (
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/api"
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
 	"github.com/ardanlabs/conf"
+	"github.com/gorilla/handlers"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
 	"math/rand"
@@ -128,6 +129,11 @@ func run() error {
 
 	// Apply CORS policy
 	router = applyCORSHandler(router)
+
+	// Handle reverse proxy if instructed to do so
+	if cfg.Web.BehindProxy {
+		router = handlers.ProxyHeaders(router)
+	}
 
 	// Create the API server
 	apiserver := http.Server{
