@@ -30,7 +30,6 @@ import (
 	"fmt"
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/api"
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
-	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/globaltime"
 	"github.com/ardanlabs/conf"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
@@ -39,6 +38,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 // main is the program entry point. The only purpose of this function is to call run() and set the exit code if there is
@@ -59,7 +59,7 @@ func main() {
 // * waits for any termination event: SIGTERM signal (UNIX), non-recoverable server error, etc.
 // * closes the principal web server
 func run() error {
-	rand.Seed(globaltime.Now().UnixNano())
+	rand.Seed(time.Now().UnixNano())
 	// Load Configuration and defaults
 	cfg, err := loadConfiguration()
 	if err != nil {

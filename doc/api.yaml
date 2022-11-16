@@ -40,7 +40,7 @@ components:
       title: Student enroll form data
       type: object
       properties:
-        studentId:
+        studentID:
           type: integer
           minimum: 1
           maximum: 9999999
@@ -62,14 +62,14 @@ components:
           format: email
           pattern: "@studenti\\.uniroma1\\.it$"
           minLength: 25
-          maxLength: 50
+          maxLength: 70
           example: doe.1234567@studenti.uniroma1.it
-        repoUrl:
+        repoURL:
           type: string
           format: url
           pattern: "^(ssh://)?git@.*"
           minLength: 5
-          maxLength: 50
+          maxLength: 200
           example: git@github.com:yourname/yourrepo.git
 
     StudentEnrollResult:
