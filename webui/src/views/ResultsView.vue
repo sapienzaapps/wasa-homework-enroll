@@ -107,11 +107,11 @@ export default {
 			<tbody>
 			<tr v-for="r in this.results">
 				<td>{{ r.studentID }}</td>
-				<td v-if="r.hash === ''" colspan="5" @click="openGitLog(r.studentID)">
+				<td v-if="r.hash === ''" colspan="5" class="dummylink" @click="openGitLog(r.studentID)">
 					(empty repository or error in git-clone)
 				</td>
-				<td v-if="r.hash !== ''" @click="openGitLog(r.studentID)"><pre>{{ r.hash }}</pre></td>
-				<td v-if="r.hash !== ''" @click="openOpenAPILog(r.studentID)">{{ r.openAPI }}</td>
+				<td v-if="r.hash !== ''" class="dummylink" @click="openGitLog(r.studentID)"><pre>{{ r.hash }}</pre></td>
+				<td v-if="r.hash !== ''" class="dummylink" @click="openOpenAPILog(r.studentID)">{{ r.openAPI }}</td>
 				<td v-if="r.hash !== ''">- <!-- {{ r.go }} --></td>
 				<td v-if="r.hash !== ''">- <!-- {{ r.vue }} --></td>
 				<td v-if="r.hash !== ''">- <!-- {{ r.docker }} --></td>
@@ -123,4 +123,9 @@ export default {
 </template>
 
 <style>
+.dummylink {
+	text-decoration: underline;
+	color: blue;
+	cursor: pointer;
+}
 </style>
