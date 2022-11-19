@@ -1,6 +1,10 @@
 package api
 
-import "regexp"
+import (
+	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
+	"regexp"
+	"time"
+)
 
 var (
 	emailRx = regexp.MustCompile(`@studenti\.uniroma1\.it$`)
@@ -25,4 +29,24 @@ func (s *StudentEnrollRequest) Valid() bool {
 
 type StudentEnrollResult struct {
 	PublicKey string `json:"publicKey"`
+}
+
+type HomeworkResult struct {
+	StudentID uint64    `json:"studentID"`
+	Hash      string    `json:"hash"`
+	OpenAPI   int       `json:"openAPI"`
+	Go        int       `json:"go"`
+	Vue       int       `json:"vue"`
+	Docker    int       `json:"docker"`
+	LastCheck time.Time `json:"lastCheck"`
+}
+
+func (h *HomeworkResult) FromDB(r database.HomeworkResult) {
+	h.StudentID = r.StudentID
+	h.Hash = r.Hash
+	h.OpenAPI = r.OpenAPI
+	h.Go = r.Go
+	h.Vue = r.Vue
+	h.Docker = r.Docker
+	h.LastCheck = r.LastCheck
 }

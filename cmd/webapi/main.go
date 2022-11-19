@@ -25,14 +25,13 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/api"
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
 	"github.com/ardanlabs/conf"
 	"github.com/gorilla/handlers"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/jackc/pgx/v5"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
@@ -83,14 +82,14 @@ func run() error {
 
 	// Start Database
 	logger.Println("initializing database support")
-	dbconn, err := sql.Open("sqlite3", cfg.DB.Filename)
+	dbconn, err := pgx.Connect(context.Background(), cfg.DB.DSN)
 	if err != nil {
-		logger.WithError(err).Error("error opening SQLite DB")
+		logger.WithError(err).Error("error opening Postgres DB")
 		return fmt.Errorf("opening SQLite: %w", err)
 	}
 	defer func() {
 		logger.Debug("database stopping")
-		_ = dbconn.Close()
+		_ = dbconn.Close(context.Background())
 	}()
 	db, err := database.New(dbconn)
 	if err != nil {

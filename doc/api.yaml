@@ -10,7 +10,7 @@ info:
 paths:
   /enroll/:
     post:
-      tags: ["General"]
+      tags: ["Enrollment"]
       operationId: enrollStudent
       summary: Enroll a new student in the system, and provides the public key.
       description: |-
@@ -32,6 +32,53 @@ paths:
         "409":
           description: The user is already enrolled, cannot proceed
         "400": { $ref: "#/components/responses/BadRequest" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
+  /results/:
+    get:
+      tags: [ "Results" ]
+      operationId: listResults
+      summary: Return the list of all students with their results
+      description: |-
+        Return a list of result object.
+        Objects contain the result of the homework validation for each student.
+      responses:
+        "200":
+          description: List retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultList"
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
+  /results/{studentId}/git:
+    get:
+      tags: [ "Results" ]
+      operationId: getGitLog
+      summary: Return the log for Git actions
+      description: |-
+        Return the output of Git commands that were used to clone the repository.
+      responses:
+        "200":
+          description: Git log
+          content:
+            text/plain: {}
+        "404": { $ref: "#/components/responses/ResultNotFound" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
+  /results/{studentId}/openapi:
+    get:
+      tags: [ "Results" ]
+      operationId: getOpenAPILog
+      summary: Return the reason for OpenAPI score
+      description: |-
+        Return a descriptive text for the OpenAPI score.
+      responses:
+        "200":
+          description: OpenAPI score log
+          content:
+            text/plain: {}
+        "404": { $ref: "#/components/responses/ResultNotFound" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
 components:
@@ -82,7 +129,53 @@ components:
           maxLength: 200
           example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ1pP7eWBFEMmf494e10G2242GoWB/pz6g3MO62Twpgy"
 
+    ResultList:
+      title: List of homework results
+      type: array
+      items:
+        type: object
+        properties:
+          studentID:
+            type: integer
+            minimum: 1
+            maximum: 9999999
+            example: 1234567
+          hash:
+            type: string
+            example: abcdef012345
+            pattern: ^[a-fA-F0-9]+$
+            maxLength: 50
+            minLength: 5
+          openapi:
+            type: integer
+            minimum: 0
+            maximum: 30
+            example: 18
+          go:
+            type: integer
+            minimum: 0
+            maximum: 30
+            example: 18
+          vue:
+            type: integer
+            minimum: 0
+            maximum: 30
+            example: 18
+          docker:
+            type: integer
+            minimum: 0
+            maximum: 30
+            example: 18
+          lastcheck:
+            type: string
+            format: date-time
+            example: 2020-01-03T16:12:58Z
+            pattern: ^[0-9:A-Z-]$
+
+
   responses:
+    ResultNotFound:
+      description: The requested result has not been found.
     BadRequest:
       description: The request was not compliant with the documentation (eg. missing fields, etc)
     InternalServerError:

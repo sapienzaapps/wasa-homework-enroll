@@ -13,9 +13,6 @@ RUN npm config set update-notifier false && npm install && npm run build-embed
 ARG DOCKER_PREFIX
 FROM ${DOCKER_PREFIX}enrico204/golang:1.19.2-2 AS builder
 
-# Re-enable CGo
-ENV CGO_ENABLED 1
-
 # Disable Go proxy and public checksum for private repositories (Go 1.13+)
 ENV GOPRIVATE git.sapienzaapps.it
 

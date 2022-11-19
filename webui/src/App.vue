@@ -24,8 +24,12 @@ export default {}
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<RouterLink to="/" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#check-circle"/></svg>
+								Homework results
+							</RouterLink>
+							<RouterLink to="/enroll" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#send"/></svg>
-								Homework delivery
+								Deliver your homework
 							</RouterLink>
 						</li>
 					</ul>
