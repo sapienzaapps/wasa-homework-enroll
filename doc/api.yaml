@@ -7,6 +7,9 @@ info:
     The application is collecting students information (student ID, name, repository URL) and it is providing an SSH key
     that the student should configure in their repository.
   version: 1.0.0
+tags:
+  - name: Enrollment
+  - name: Results
 paths:
   /enroll/:
     post:
@@ -23,7 +26,7 @@ paths:
             schema:
               $ref: "#/components/schemas/StudentEnrollRequest"
       responses:
-        "200":
+        "202":
           description: Student enrolled successfully, public key returned
           content:
             application/json:
@@ -52,6 +55,8 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
   /results/{studentId}/git:
+    parameters:
+      - $ref: '#/components/parameters/StudentID'
     get:
       tags: [ "Results" ]
       operationId: getGitLog
@@ -67,6 +72,8 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
 
   /results/{studentId}/openapi:
+    parameters:
+      - $ref: '#/components/parameters/StudentID'
     get:
       tags: [ "Results" ]
       operationId: getOpenAPILog
@@ -85,26 +92,29 @@ components:
   schemas:
     StudentEnrollRequest:
       title: Student enroll form data
+      description: |-
+        Student enroll request.
+        It contains all necessary data to enroll the student in the system for homework evaluation.
       type: object
       properties:
         studentID:
-          type: integer
-          minimum: 1
-          maximum: 9999999
-          example: 1234567
+          $ref: '#/components/schemas/StudentID'
         firstName:
+          description: Student first name
           type: string
           pattern: ^.*?$
           minLength: 2
           maxLength: 32
           example: John
         lastName:
+          description: Student last name / family name
           type: string
           pattern: ^.*?$
           minLength: 2
           maxLength: 32
           example: Doe
         email:
+          description: Student institutional e-mail address
           type: string
           format: email
           pattern: "@studenti\\.uniroma1\\.it$"
@@ -112,8 +122,8 @@ components:
           maxLength: 70
           example: doe.1234567@studenti.uniroma1.it
         repoURL:
+          description: URL of the Git repository with all homeworks
           type: string
-          format: url
           pattern: "^(ssh://)?git@.*"
           minLength: 5
           maxLength: 200
@@ -121,9 +131,11 @@ components:
 
     StudentEnrollResult:
       title: Student enroll response
+      description: The response contains the SSH used for accessing the Git repository.
       type: object
       properties:
         publicKey:
+          description: SSH public key (used as Deploy Key in SSH repos)
           type: string
           minLength: 20
           maxLength: 200
@@ -131,47 +143,70 @@ components:
 
     ResultList:
       title: List of homework results
+      description: |-
+        Contains a list of homework results, one per student.
+        Each results contains the score for all homeworks, plus some additional information.
       type: array
+      minItems: 0
+      maxItems: 300
       items:
         type: object
         properties:
           studentID:
-            type: integer
-            minimum: 1
-            maximum: 9999999
-            example: 1234567
+            $ref: '#/components/schemas/StudentID'
           hash:
+            description: Git commit hash
             type: string
             example: abcdef012345
             pattern: ^[a-fA-F0-9]+$
             maxLength: 50
             minLength: 5
           openapi:
+            description: Score of the OpenAPI part (1st homework)
             type: integer
             minimum: 0
             maximum: 30
             example: 18
           go:
+            description: Score of the Go part (2nd homework)
             type: integer
             minimum: 0
             maximum: 30
             example: 18
           vue:
+            description: Score of the Vue.js part (3rd homework)
             type: integer
             minimum: 0
             maximum: 30
             example: 18
           docker:
+            description: Score of the docker part (4th homework)
             type: integer
             minimum: 0
             maximum: 30
             example: 18
           lastcheck:
+            description: Last time the homework was checked
             type: string
             format: date-time
             example: 2020-01-03T16:12:58Z
-            pattern: ^[0-9:A-Z-]$
+            pattern: ^[0-9:A-Z-]*$
 
+    StudentID:
+      description: Student identifier (matricola)
+      type: integer
+      minimum: 1
+      maximum: 9999999
+      example: 1234567
+
+  parameters:
+    StudentID:
+      in: path
+      required: true
+      description: Student identifier (matricola)
+      name: studentId
+      schema:
+        $ref: '#/components/schemas/StudentID'
 
   responses:
     ResultNotFound:
