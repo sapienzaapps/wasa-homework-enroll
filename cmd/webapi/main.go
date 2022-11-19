@@ -31,7 +31,7 @@ import (
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
 	"github.com/ardanlabs/conf"
 	"github.com/gorilla/handlers"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
@@ -82,14 +82,14 @@ func run() error {
 
 	// Start Database
 	logger.Println("initializing database support")
-	dbconn, err := pgx.Connect(context.Background(), cfg.DB.DSN)
+	dbconn, err := pgxpool.New(context.Background(), cfg.DB.DSN)
 	if err != nil {
 		logger.WithError(err).Error("error opening Postgres DB")
 		return fmt.Errorf("opening SQLite: %w", err)
 	}
 	defer func() {
 		logger.Debug("database stopping")
-		_ = dbconn.Close(context.Background())
+		dbconn.Close()
 	}()
 	db, err := database.New(dbconn)
 	if err != nil {

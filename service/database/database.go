@@ -33,7 +33,7 @@ package database
 import (
 	"context"
 	"errors"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var (
@@ -54,12 +54,12 @@ type AppDatabase interface {
 }
 
 type appdbimpl struct {
-	c *pgx.Conn
+	c *pgxpool.Pool
 }
 
 // New returns a new instance of AppDatabase based on the SQLite connection `db`.
 // `db` is required - an error will be returned if `db` is `nil`.
-func New(db *pgx.Conn) (AppDatabase, error) {
+func New(db *pgxpool.Pool) (AppDatabase, error) {
 	if db == nil {
 		return nil, errors.New("database is required when building a AppDatabase")
 	}
