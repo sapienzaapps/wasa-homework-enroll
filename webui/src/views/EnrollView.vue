@@ -24,13 +24,13 @@ export default {
 				let response = await this.$axios.post("/enroll/", this.studentInfo);
 				this.publicKey = response.data.publicKey;
 			} catch (e) {
-				if (e.response.status === 409) {
+				if (e.response && e.response.status === 409) {
 					this.errormsg = "You are already enrolled. If you think that this is an error, write an e-mail to us.";
 					this.detailedmsg = null;
-				} else if (e.response.status === 400) {
+				} else if (e.response && e.response.status === 400) {
 					this.errormsg = "Form error, please check all fields and try again. If you think that this is an error, write an e-mail to us.";
 					this.detailedmsg = null;
-				} else if (e.response.status === 500) {
+				} else if (e.response && e.response.status === 500) {
 					this.errormsg = "An internal error occurred. We will be notified. Please try again later.";
 					this.detailedmsg = e.toString();
 				} else {

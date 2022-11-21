@@ -57,7 +57,7 @@ export default {
 				let response = await this.$axios.get("/results/");
 				this.results = response.data;
 			} catch (e) {
-				if (e.response.status === 500) {
+				if (e.response && e.response.status === 500) {
 					this.errormsg = "An internal error occurred. We will be notified. Please try again later.";
 					this.detailedmsg = e.toString();
 				} else {

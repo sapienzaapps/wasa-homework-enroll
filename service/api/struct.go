@@ -3,6 +3,7 @@ package api
 import (
 	"git.sapienzaapps.it/gamificationlab/wasa-homework-enroll/service/database"
 	"regexp"
+	"sync"
 	"time"
 )
 
@@ -49,4 +50,11 @@ func (h *HomeworkResult) FromDB(r database.HomeworkResult) {
 	h.Vue = r.Vue
 	h.Docker = r.Docker
 	h.LastCheck = r.LastCheck
+}
+
+// InMemoryCache is a simple implementation of in-memory cache, used when the upstream server is offline.
+type InMemoryCache struct {
+	sync.Mutex
+
+	Cache []database.HomeworkResult
 }

@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"github.com/jackc/pgx/v5"
+	"time"
 )
 
 func (db *appdbimpl) GetGitLog(studentid int) (string, error) {
 	var log string
-	err := db.c.QueryRow(context.Background(), `SELECT gitlog FROM grades WHERE id=$1`, studentid).Scan(&log)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	err := db.c.QueryRow(ctx, `SELECT gitlog FROM grades WHERE id=$1`, studentid).Scan(&log)
+	cancel()
 	if errors.Is(err, pgx.ErrNoRows) {
 		return "", ErrUserDoesNotExists
 	}

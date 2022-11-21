@@ -85,7 +85,7 @@ func run() error {
 	dbconn, err := pgxpool.New(context.Background(), cfg.DB.DSN)
 	if err != nil {
 		logger.WithError(err).Error("error opening Postgres DB")
-		return fmt.Errorf("opening SQLite: %w", err)
+		return fmt.Errorf("opening PGX pool: %w", err)
 	}
 	defer func() {
 		logger.Debug("database stopping")
