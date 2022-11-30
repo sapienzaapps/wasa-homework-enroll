@@ -34,8 +34,8 @@ func (db *appdbimpl) ListResults() ([]HomeworkResult, error) {
 
 		ret = append(ret, hr)
 	}
-	if rows.Err() != nil {
-		return nil, rows.Err()
+	if err = rows.Err(); err != nil {
+		return nil, err
 	}
 
 	rows.Close()
