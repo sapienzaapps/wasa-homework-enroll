@@ -49,6 +49,7 @@ type AppDatabase interface {
 	ListResults() ([]HomeworkResult, error)
 	GetGitLog(studentid int) (string, error)
 	GetOpenAPILog(studentid int) (string, error)
+	GetGoLog(studentid int) (string, error)
 
 	Ping() error
 }

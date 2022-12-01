@@ -88,6 +88,23 @@ paths:
         "404": { $ref: "#/components/responses/ResultNotFound" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
+  /results/{studentId}/golang:
+    parameters:
+      - $ref: '#/components/parameters/StudentID'
+    get:
+      tags: [ "Results" ]
+      operationId: getGoLog
+      summary: Return the reason for GoLang score
+      description: |-
+        Return a descriptive text for the GoLang score.
+      responses:
+        "200":
+          description: GoLang score log
+          content:
+            text/plain: {}
+        "404": { $ref: "#/components/responses/ResultNotFound" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
 components:
   schemas:
     StudentEnrollRequest:

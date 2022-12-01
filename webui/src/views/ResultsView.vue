@@ -50,6 +50,25 @@ export default {
 			}
 			this.loading = false;
 		},
+		async openGoLog(id) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/results/" + id + "/golang");
+				this.log = response.data;
+				const modal = new bootstrap.Modal(document.getElementById('logviewer'));
+				modal.show();
+			} catch (e) {
+				if (e.response.status === 500) {
+					this.errormsg = "An internal error occurred. We will be notified. Please try again later.";
+					this.detailedmsg = e.toString();
+				} else {
+					this.errormsg = e.toString();
+					this.detailedmsg = null;
+				}
+			}
+			this.loading = false;
+		},
 		async refresh() {
 			this.loading = true;
 			this.errormsg = null;
@@ -112,7 +131,7 @@ export default {
 				</td>
 				<td v-if="r.hash !== ''" class="dummylink" @click="openGitLog(r.studentID)"><pre>{{ r.hash }}</pre></td>
 				<td v-if="r.hash !== ''" class="dummylink" @click="openOpenAPILog(r.studentID)">{{ r.openAPI }}</td>
-				<td v-if="r.hash !== ''">- <!-- {{ r.go }} --></td>
+				<td v-if="r.hash !== ''" class="dummylink" @click="openGoLog(r.studentID)">{{ r.go }}</td>
 				<td v-if="r.hash !== ''">- <!-- {{ r.vue }} --></td>
 				<td v-if="r.hash !== ''">- <!-- {{ r.docker }} --></td>
 				<td>{{ r.lastCheck }}</td>

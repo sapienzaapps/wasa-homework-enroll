@@ -12,6 +12,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/results/", rt.wrap(rt.listResults))
 	rt.router.GET("/results/:studentid/git", rt.wrap(rt.getGitLog))
 	rt.router.GET("/results/:studentid/openapi", rt.wrap(rt.getOpenAPILog))
+	rt.router.GET("/results/:studentid/golang", rt.wrap(rt.getGoLog))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

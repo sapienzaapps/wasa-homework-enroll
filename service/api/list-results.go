@@ -21,7 +21,6 @@ func (rt *_router) listResults(w http.ResponseWriter, r *http.Request, ps httpro
 		if len(ramCache.Cache) > 0 {
 			dbresults = ramCache.Cache
 			ramCache.Unlock()
-			err = nil
 			shouldUpdateCache = false
 		} else {
 			ramCache.Unlock()
