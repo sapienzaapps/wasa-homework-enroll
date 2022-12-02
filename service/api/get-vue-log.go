@@ -9,21 +9,21 @@ import (
 	"strconv"
 )
 
-func (rt *_router) getGoLog(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getVueLog(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	studentID, err := strconv.ParseUint(ps.ByName("studentid"), 10, 64)
 	if err != nil {
-		ctx.Logger.WithError(err).Warn("go-log: error parsing student ID")
+		ctx.Logger.WithError(err).Warn("vue-log: error parsing student ID")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	openapiLog, err := rt.db.GetGoLog(int(studentID))
+	openapiLog, err := rt.db.GetVueLog(int(studentID))
 	if errors.Is(err, database.ErrUserDoesNotExists) {
-		ctx.Logger.WithError(err).Error("go-log: user does not exist")
+		ctx.Logger.WithError(err).Error("vue-log: user does not exist")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	} else if err != nil {
-		ctx.Logger.WithError(err).Error("go-log: error getting go log")
+		ctx.Logger.WithError(err).Error("vue-log: error getting vue log")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

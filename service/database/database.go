@@ -50,6 +50,8 @@ type AppDatabase interface {
 	GetGitLog(studentid int) (string, error)
 	GetOpenAPILog(studentid int) (string, error)
 	GetGoLog(studentid int) (string, error)
+	GetVueLog(studentid int) (string, error)
+	GetDockerLog(studentid int) (string, error)
 
 	Ping() error
 }

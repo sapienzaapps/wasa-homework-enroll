@@ -9,7 +9,6 @@ import (
 	"strconv"
 )
 
-// listResults returns the list of all students with their results
 func (rt *_router) getGitLog(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	studentID, err := strconv.ParseUint(ps.ByName("studentid"), 10, 64)
 	if err != nil {

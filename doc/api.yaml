@@ -105,6 +105,40 @@ paths:
         "404": { $ref: "#/components/responses/ResultNotFound" }
         "500": { $ref: "#/components/responses/InternalServerError" }
 
+  /results/{studentId}/vue:
+    parameters:
+      - $ref: '#/components/parameters/StudentID'
+    get:
+      tags: [ "Results" ]
+      operationId: getVueLog
+      summary: Return the reason for Vue.js score
+      description: |-
+        Return a descriptive text for the Vue.js score.
+      responses:
+        "200":
+          description: Vue.js score log
+          content:
+            text/plain: {}
+        "404": { $ref: "#/components/responses/ResultNotFound" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
+  /results/{studentId}/docker:
+    parameters:
+      - $ref: '#/components/parameters/StudentID'
+    get:
+      tags: [ "Results" ]
+      operationId: getDockerLog
+      summary: Return the reason for Docker score
+      description: |-
+        Return a descriptive text for the Docker score.
+      responses:
+        "200":
+          description: Docker score log
+          content:
+            text/plain: {}
+        "404": { $ref: "#/components/responses/ResultNotFound" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+
 components:
   schemas:
     StudentEnrollRequest:

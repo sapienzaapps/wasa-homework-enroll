@@ -32,29 +32,22 @@ export default {
 			this.loading = false;
 		},
 		async openOpenAPILog(id) {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios.get("/results/" + id + "/openapi");
-				this.log = response.data;
-				const modal = new bootstrap.Modal(document.getElementById('logviewer'));
-				modal.show();
-			} catch (e) {
-				if (e.response.status === 500) {
-					this.errormsg = "An internal error occurred. We will be notified. Please try again later.";
-					this.detailedmsg = e.toString();
-				} else {
-					this.errormsg = e.toString();
-					this.detailedmsg = null;
-				}
-			}
-			this.loading = false;
+			await this.openLog("openapi", id);
 		},
 		async openGoLog(id) {
+			await this.openLog("golang", id);
+		},
+		async openVueLog(id) {
+			await this.openLog("vue", id);
+		},
+		async openDockerLog(id) {
+			await this.openLog("docker", id);
+		},
+		async openLog(part, id) {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/results/" + id + "/golang");
+				let response = await this.$axios.get("/results/" + id + "/" + part);
 				this.log = response.data;
 				const modal = new bootstrap.Modal(document.getElementById('logviewer'));
 				modal.show();
@@ -109,6 +102,7 @@ export default {
 			All scores are within 0-30 range.<br />
 			Click on the Git commit ID to retrieve the git command output.<br />
 			Click on the score value to get the detailed evaluation.
+			Dash sign "-" indicates that we haven't received the submission for that part.
 		</p>
 
 		<table class="table" v-if="results !== null">
@@ -129,11 +123,34 @@ export default {
 				<td v-if="r.hash === ''" colspan="5" class="dummylink" @click="openGitLog(r.studentID)">
 					(empty repository or error in git-clone)
 				</td>
+				<!-- Git repository hash considered for grades -->
 				<td v-if="r.hash !== ''" class="dummylink" @click="openGitLog(r.studentID)"><pre>{{ r.hash }}</pre></td>
-				<td v-if="r.hash !== ''" class="dummylink" @click="openOpenAPILog(r.studentID)">{{ r.openAPI }}</td>
-				<td v-if="r.hash !== ''" class="dummylink" @click="openGoLog(r.studentID)">{{ r.go }}</td>
-				<td v-if="r.hash !== ''">- <!-- {{ r.vue }} --></td>
-				<td v-if="r.hash !== ''">- <!-- {{ r.docker }} --></td>
+
+				<!-- OpenAPI results (first td: actual results, second td: part not delivered) -->
+				<td v-if="r.hash !== ''" class="dummylink" @click="openOpenAPILog(r.studentID)">
+					<span v-if="r.openAPI > -1">{{ r.openAPI }}</span>
+					<span v-if="r.openAPI === -1">-</span>
+				</td>
+
+				<!-- Go results (first td: actual results, second td: part not delivered) -->
+				<td v-if="r.hash !== ''" class="dummylink" @click="openGoLog(r.studentID)">
+					<span v-if="r.go > -1">{{ r.go }}</span>
+					<span v-if="r.go === -1">-</span>
+				</td>
+
+				<!-- Vue.js results (first td: actual results, second td: part not delivered) -->
+				<td v-if="r.hash !== ''" class="dummylink" @click="openVueLog(r.studentID)">
+					<span v-if="r.vue > -1">{{ r.vue }}</span>
+					<span v-if="r.vue === -1">-</span>
+				</td>
+
+				<!-- Docker results (first td: actual results, second td: part not delivered) -->
+				<td v-if="r.hash !== ''" class="dummylink" @click="openDockerLog(r.studentID)">
+					<span v-if="r.docker > -1">{{ r.docker }}</span>
+					<span v-if="r.docker === -1">-</span>
+				</td>
+
+				<!-- Last check -->
 				<td>{{ r.lastCheck }}</td>
 			</tr>
 			</tbody>
@@ -143,7 +160,6 @@ export default {
 
 <style>
 .dummylink {
-	text-decoration: underline;
 	color: blue;
 	cursor: pointer;
 }
