@@ -13,23 +13,7 @@ export default {
 	},
 	methods: {
 		async openGitLog(id) {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios.get("/results/" + id + "/git");
-				this.log = response.data;
-				const modal = new bootstrap.Modal(document.getElementById('logviewer'));
-				modal.show();
-			} catch (e) {
-				if (e.response.status === 500) {
-					this.errormsg = "An internal error occurred. We will be notified. Please try again later.";
-					this.detailedmsg = e.toString();
-				} else {
-					this.errormsg = e.toString();
-					this.detailedmsg = null;
-				}
-			}
-			this.loading = false;
+			await this.openLog("git", id);
 		},
 		async openOpenAPILog(id) {
 			await this.openLog("openapi", id);
