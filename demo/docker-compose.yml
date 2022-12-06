@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  db:
+    image: enrico204/postgres-dbmate:14.5-1.15-1
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
