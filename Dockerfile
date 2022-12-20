@@ -11,7 +11,7 @@ WORKDIR webui
 RUN npm config set update-notifier false && npm install && npm run build-embed
 
 ARG DOCKER_PREFIX
-FROM ${DOCKER_PREFIX}enrico204/golang:1.19.2-2 AS builder
+FROM ${DOCKER_PREFIX}enrico204/golang:1.19.4-6 AS builder
 
 # Disable Go proxy and public checksum for private repositories (Go 1.13+)
 ENV GOPRIVATE git.sapienzaapps.it
@@ -29,7 +29,6 @@ RUN go generate -mod=vendor ./...
 
 ### Build executables, strip debug symbols and compress with UPX
 WORKDIR /src/cmd/
-RUN mkdir /app/
 RUN /bin/bash -euo pipefail -c "for ex in \$(ls); do pushd \$ex; go build -tags webui,openapi -mod=vendor -ldflags \"-extldflags \\\"-static\\\" -X main.AppVersion=${APP_VERSION} -X main.BuildDate=${BUILD_DATE}\" -a -installsuffix cgo -o /app/\$ex .; popd; done"
 RUN cd /app/ && strip * && upx -9 *
 
