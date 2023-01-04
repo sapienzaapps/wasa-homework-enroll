@@ -98,7 +98,7 @@ export default {
 				<th scope="col">Go</th>
 				<th scope="col">Vue.js</th>
 				<th scope="col">Docker</th>
-				<th scope="col">Last check</th>
+				<th scope="col">Grades updated at</th>
 			</tr>
 			</thead>
 			<tbody>

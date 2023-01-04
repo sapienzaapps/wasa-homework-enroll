@@ -18,9 +18,7 @@ type HomeworkResult struct {
 func (db *appdbimpl) ListResults() ([]HomeworkResult, error) {
 	var ret []HomeworkResult
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	rows, err := db.c.Query(ctx, `SELECT id, hash, openapi, golang, vue, docker, lastcheck FROM grades`)
-	cancel()
+	rows, err := db.c.Query(context.Background(), `SELECT id, hash, openapi, golang, vue, docker, lastcheck FROM grades`)
 	if err != nil {
 		return nil, err
 	}
